@@ -1,1 +1,27 @@
-# demo
+##DEMO
+Для заполнения индекса Elasticsearch использовался Debezium-embedded на уровне приложения, который через воркер процесс вычитывает PostgreSQL, собирает и индексирует общий документ. Кеширование реализовывалось с помощью Redis, в котором также хранятся оффсеты для debezium и мапа с начальными балансами пользователей (для шедулера, увеличивающего баланс). Использовался самописный PageDto<> для удобства. В приложение есть возможность выбора реализации поиска (через elasticsearch/jpa), регулируется параметром USE_ELASTIC в .env.
+
+## Стек:
+
+- Java 19
+- Spring Boot 3.4.2
+- Maven  
+- PostgreSQL 17  
+- Redis 3.21
+- Elasticsearch 8.17
+- Kibana 
+- Debezium-embedded 
+- JUnit + Testcontainers
+- Swagger 
+- Docker
+
+---
+
+## Запуск проекта
+
+### 1. Клонировать репозиторий
+### 2. В корне проекта выполнить docker compose up --build
+
+После полного запуска станет доступен Swagger-ui на http://localhost:8080/swagger-ui/index.html и Kibana на http://localhost:5601 для визуализации идексов Elasticsearch. 
+Тестовые данные для базы накатываются со стартом приложения.
+Токен для запросов можно получить на /api/auth/login в Swagger, креды для токена находятся в .env (USER_1_LOGIN, PASS).
