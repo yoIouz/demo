@@ -1,0 +1,91 @@
+name: demo
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: demo
+    volumes:
+      - ./infrastructure:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d demo && psql -U debezium_user -d demo -c 'SELECT 1;'" ]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine3.21
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:8.17.4
+    container_name: elastic
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health | grep -E '\"status\":\"(yellow|green)\"'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  kibana:
+    image: kibana:8.17.4
+    container_name: kibana-ui
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  app:
+    build: .
+    container_name: demo
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DEBEZIUM_PORT: ${DEBEZIUM_PORT}
+      DEBEZIUM_USER: ${DEBEZIUM_USER}
+      DEBEZIUM_PASSWORD: ${DEBEZIUM_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_TTL: ${JWT_TTL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_REDIS_HOST: ${SPRING_REDIS_HOST}
+      SPRING_DEBEZIUM_HOST: ${SPRING_DEBEZIUM_HOST}
+      SPRING_ELASTIC_URI: ${SPRING_ELASTIC_URI}
+      USE_ELASTIC: ${USE_ELASTIC}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped

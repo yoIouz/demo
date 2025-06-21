@@ -1,0 +1,45 @@
+spring:
+  cache:
+    type: redis
+  elasticsearch:
+    uris: ${SPRING_ELASTIC_URI:http://localhost:9200}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/demo}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: true
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: 6379
+
+logging:
+  level:
+    io.debezium: ERROR
+
+debezium:
+  host: ${SPRING_DEBEZIUM_HOST:localhost}
+  port: ${DEBEZIUM_PORT:}
+  user: ${DEBEZIUM_USER:}
+  password: ${DEBEZIUM_PASSWORD:}
+  redis-host: ${SPRING_REDIS_HOST:localhost}
+
+search:
+  use-elastic: ${USE_ELASTIC:false}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration: ${JWT_TTL:3600000}
+
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
