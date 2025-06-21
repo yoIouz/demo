@@ -8,6 +8,7 @@
 
 - Java 19
 - Spring Boot 3.4.2
+- Spring JPA
 - Maven  
 - PostgreSQL 17  
 - Redis 3.21
