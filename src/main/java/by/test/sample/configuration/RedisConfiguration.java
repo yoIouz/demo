@@ -10,8 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
@@ -36,15 +34,6 @@ public class RedisConfiguration {
                 .entryTtl(Duration.ofMinutes(REDIS_TTL_MINUTES))
                 .disableCachingNullValues();
     }
-
-//    @Bean
-//    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
-//        RedisTemplate<String, String> template = new RedisTemplate<>();
-//        template.setConnectionFactory(connectionFactory);
-//        template.setKeySerializer(new StringRedisSerializer());
-//        template.setValueSerializer(new StringRedisSerializer());
-//        return template;
-//    }
 
     @Bean("userKeyGenerator")
     public KeyGenerator userKeyGenerator() {
