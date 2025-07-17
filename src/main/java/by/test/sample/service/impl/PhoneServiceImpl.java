@@ -27,7 +27,7 @@ public class PhoneServiceImpl implements PhoneService {
     @Transactional
     @CacheEvict(value = "userSearchCache", allEntries = true)
     public void addPhones(Long currentUserId, PhoneDto phones) {
-        var user = userRepository.findById(currentUserId)
+        var user = userRepository.findWithRelationsById(currentUserId)
                 .orElseThrow(UserNotFoundException::new);
         userValidator.validatePhonesAreUnique(currentUserId, phones.phones());
         Set<String> existingPhones = user.getPhones().stream()

@@ -17,8 +17,7 @@ public class UserSpecifications {
             if (query != null) {
                 query.distinct(true);
             }
-            return Specification
-                    .where(dateOfBirthGreaterOrEqual(filter.getDateOfBirth()))
+            return Specification.where(dateOfBirthGreaterOrEqual(filter.getDateOfBirth()))
                     .and(nameStartsWithIgnoreCase(filter.getName()))
                     .and(emailEquals(filter.getEmail()))
                     .and(phoneEquals(filter.getPhone()))

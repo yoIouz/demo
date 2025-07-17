@@ -39,6 +39,8 @@ public final class ApplicationConstants {
 
     public static final String USERS_ELASTIC_INDEX = "users";
 
+    public static final String OFFSET_STORAGE_PREFIX = "debezium-offset:";
+
     /// REDIS
     public static final int REDIS_TTL_MINUTES = 5;
 

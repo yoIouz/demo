@@ -4,7 +4,6 @@ import by.test.sample.dto.PageDto;
 import by.test.sample.dto.UserDto;
 import by.test.sample.dto.UserFilter;
 import by.test.sample.service.UserService;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<UserDto> updateUser(@AuthenticationPrincipal Long currentUserId,
                                               @RequestBody @Valid UserDto userDto) {
         UserDto updatedUser = userService.updateUser(currentUserId, userDto);

@@ -18,9 +18,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class RedisOffsetBackingStore implements OffsetBackingStore {
+import static by.test.sample.utils.ApplicationConstants.OFFSET_STORAGE_PREFIX;
 
-    private static final String PREFIX = "debezium-offset:";
+public class RedisOffsetBackingStore implements OffsetBackingStore {
 
     private String redisUri;
 
@@ -91,7 +91,7 @@ public class RedisOffsetBackingStore implements OffsetBackingStore {
     }
 
     private String keyToString(ByteBuffer key) {
-        return PREFIX + Base64.getEncoder().encodeToString(toByteArray(key));
+        return OFFSET_STORAGE_PREFIX + Base64.getEncoder().encodeToString(toByteArray(key));
     }
 
     private byte[] toByteArray(ByteBuffer buffer) {

@@ -25,16 +25,19 @@ logging:
 
 debezium:
   host: ${SPRING_DEBEZIUM_HOST:localhost}
-  port: ${DEBEZIUM_PORT:}
-  user: ${DEBEZIUM_USER:}
-  password: ${DEBEZIUM_PASSWORD:}
+  port: ${DEBEZIUM_PORT:5432}
+  user: ${DEBEZIUM_USER:debezium_user}
+  password: ${DEBEZIUM_PASSWORD:secret}
   redis-host: ${SPRING_REDIS_HOST:localhost}
 
 search:
   use-elastic: ${USE_ELASTIC:false}
 
+scheduler:
+  batch_size: 100
+
 jwt:
-  secret-key: ${JWT_SECRET_KEY}
+  secret-key: ${JWT_SECRET_KEY:3c697e4b6f342f4e543f3e3c697e4b6f342f4e543f3e3c697e4b6f342f4e543f}
   expiration: ${JWT_TTL:3600000}
 
 server:
