@@ -7,7 +7,7 @@ Bcrypt для паролей не использовался для упроще
 
 ## Стек:
 
-- Java 19
+- Java 21
 - Spring Boot 3.4.2
 - JPA
 - Maven  
