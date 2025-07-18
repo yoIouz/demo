@@ -16,7 +16,7 @@ import by.test.sample.service.UserService;
 import by.test.sample.utils.UserValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "userCache", key = "#currentUserId")
+    @CachePut(value = "userCache", key = "#currentUserId")
     public UserDto updateUser(Long currentUserId, UserDto userDto) {
         User existing = userRepository.findById(currentUserId)
                 .orElseThrow(UserNotFoundException::new);
@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
                             .toList()
             );
         }
+        userRepository.save(existing);
         return userMapper.toUserDto(existing);
     }
 
