@@ -42,7 +42,7 @@ public final class ApplicationConstants {
     public static final String OFFSET_STORAGE_PREFIX = "debezium-offset:";
 
     /// REDIS
-    public static final int REDIS_TTL_MINUTES = 5;
+    public static final int REDIS_TTL_MINUTES = 3;
 
     public static final String REDIS_INITIAL_BALANCES_KEY = "initial_balances";
 

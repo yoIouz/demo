@@ -25,7 +25,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "userSearchCache", allEntries = true)
+    @CacheEvict(value = "userCache", key = "#currentUserId")
     public void addEmail(Long currentUserId, EmailDto emails) {
         var user = userRepository.findById(currentUserId)
                 .orElseThrow(UserNotFoundException::new);

@@ -53,20 +53,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "userSearchCache", key = "#pageable.pageNumber + '_' + #pageable.pageSize")
     public PageDto<UserDto> findAllUsers(Pageable pageable) {
         return this.delegateToEngine(engine -> engine.findAllUsers(pageable));
     }
 
     @Override
-    @Cacheable(value = "userSearchCache", keyGenerator = "userKeyGenerator")
+    @Cacheable(value = "userCache", key = "#userId")
+    public UserDto findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .map(userMapper::toUserDto)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    @Cacheable(value = "userSearchCache", keyGenerator = "userKeyGenerator", unless = "#result.isEmpty()")
     public PageDto<UserDto> searchUsers(UserFilter userFilter, Pageable pageable) {
         return this.delegateToEngine(engine -> engine.searchUsers(userFilter, pageable));
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "userSearchCache", allEntries = true)
+    @CacheEvict(value = "userCache", key = "#currentUserId")
     public UserDto updateUser(Long currentUserId, UserDto userDto) {
         User existing = userRepository.findById(currentUserId)
                 .orElseThrow(UserNotFoundException::new);

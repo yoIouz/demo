@@ -25,7 +25,7 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "userSearchCache", allEntries = true)
+    @CacheEvict(value = "userCache", key = "#currentUserId")
     public void addPhones(Long currentUserId, PhoneDto phones) {
         var user = userRepository.findWithRelationsById(currentUserId)
                 .orElseThrow(UserNotFoundException::new);

@@ -29,6 +29,11 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> findUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findUserById(id));
+    }
+
     @PostMapping("/search")
     public ResponseEntity<PageDto<UserDto>> searchUsers(@RequestBody @Valid UserFilter userFilter,
                                                         @ParameterObject
