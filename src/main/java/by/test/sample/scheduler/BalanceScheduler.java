@@ -2,6 +2,8 @@ package by.test.sample.scheduler;
 
 import by.test.sample.entity.Account;
 import by.test.sample.repository.AccountRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ public class BalanceScheduler {
 
     @Value("${scheduler.batch_size:50}")
     private int BATCH_SIZE;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final AccountRepository accountRepository;
 
@@ -68,11 +73,15 @@ public class BalanceScheduler {
 
                 if (batch.size() >= BATCH_SIZE) {
                     accountRepository.saveAll(batch);
+                    entityManager.flush();
+                    entityManager.clear();
                     batch.clear();
                 }
             });
             if (!batch.isEmpty()) {
                 accountRepository.saveAll(batch);
+                entityManager.flush();
+                entityManager.clear();
             }
         }
     }

@@ -55,7 +55,7 @@ public class UserControllerIntegrationTest extends CustomTestContainer {
     @Test
     @Transactional
     @WithMockUser(username = "testuser")
-    public void testSearchUsers_ValidFilter_ReturnsOk() throws Exception {
+    public void testSearchUsersValidFilterReturnsOk() throws Exception {
         UserFilter filter = new UserFilter();
         filter.setPhone("79201234567");
         String jsonFilter = objectMapper.writeValueAsString(filter);
@@ -72,7 +72,7 @@ public class UserControllerIntegrationTest extends CustomTestContainer {
     @Test
     @Transactional
     @WithMockUser(username = "testuser")
-    public void testSearchUsers_InvalidFilter_ReturnsBadRequest() throws Exception {
+    public void testSearchUsersInvalidFilterReturnsBadRequest() throws Exception {
         UserFilter filter = new UserFilter();
         filter.setEmail("email");
         String jsonFilter = objectMapper.writeValueAsString(filter);
