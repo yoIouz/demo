@@ -39,7 +39,7 @@ public class ElasticSearchEngine implements SearchEngine {
                 .from((int) pageable.getOffset())
                 .size(pageable.getPageSize())
         );
-        return this.getUserDtoPage(pageable, searchRequest);
+        return this.getUserDtoPage(searchRequest, pageable);
     }
 
     @Override
@@ -50,7 +50,29 @@ public class ElasticSearchEngine implements SearchEngine {
                 .from((int) pageable.getOffset())
                 .size(pageable.getPageSize())
         );
-        return this.getUserDtoPage(pageable, searchRequest);
+        return this.getUserDtoPage(searchRequest, pageable);
+    }
+
+    @Override
+    public UserDto findUserById(Long userId) {
+        BoolQuery query = new BoolQuery.Builder()
+                .must(builder ->
+                        builder.match(m -> m.field("id").query(userId)))
+                .build();
+        SearchRequest searchRequest = SearchRequest.of(sr -> sr
+                .index(USERS_ELASTIC_INDEX)
+                .query(q -> q.bool(query)));
+        try {
+            return elasticsearchClient.search(searchRequest, UserDto.class).hits()
+                    .hits().stream()
+                    .map(Hit::source)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
+        } catch (IOException e) {
+            log.error("Failed to execute Elasticsearch query", e);
+            return null;
+        }
     }
 
     @Override
@@ -88,7 +110,7 @@ public class ElasticSearchEngine implements SearchEngine {
         return boolQuery.must(mustQueries).build();
     }
 
-    private PageDto<UserDto> getUserDtoPage(Pageable pageable, SearchRequest searchRequest) {
+    private PageDto<UserDto> getUserDtoPage(SearchRequest searchRequest, Pageable pageable) {
         try {
             SearchResponse<UserDto> response = elasticsearchClient.search(searchRequest, UserDto.class);
             List<UserDto> content = response.hits().hits().stream()

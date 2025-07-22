@@ -5,6 +5,7 @@ import by.test.sample.dto.UserDto;
 import by.test.sample.dto.UserFilter;
 import by.test.sample.entity.User;
 import by.test.sample.enums.SearchEngineType;
+import by.test.sample.exception.UserNotFoundException;
 import by.test.sample.mapper.UserMapper;
 import by.test.sample.repository.UserRepository;
 import by.test.sample.repository.UserSpecifications;
@@ -35,6 +36,14 @@ public class JPASearchEngine implements SearchEngine {
     public PageDto<UserDto> searchUsers(UserFilter filter, Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(UserSpecifications.withFilter(filter), pageable);
         return userMapper.toUserDtoPage(usersPage);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDto findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .map(userMapper::toUserDto)
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override

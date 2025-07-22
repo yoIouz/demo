@@ -60,9 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(value = "userCache", key = "#userId")
     public UserDto findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .map(userMapper::toUserDto)
-                .orElseThrow(UserNotFoundException::new);
+        return this.delegateToEngine(engine -> engine.findUserById(userId));
     }
 
     @Override
@@ -104,7 +102,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserDto(existing);
     }
 
-    private PageDto<UserDto> delegateToEngine(Function<SearchEngine, PageDto<UserDto>> operation) {
+    private <T> T delegateToEngine(Function<SearchEngine, T> operation) {
         SearchEngineType key = SearchEngineType.getEngine(useElastic);
         return Optional.ofNullable(searchEnginesMap.get(key))
                 .map(operation)
