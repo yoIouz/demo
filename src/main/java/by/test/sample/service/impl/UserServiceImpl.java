@@ -14,7 +14,6 @@ import by.test.sample.repository.UserRepository;
 import by.test.sample.service.SearchEngine;
 import by.test.sample.service.UserService;
 import by.test.sample.utils.UserValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,7 +27,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -73,33 +71,34 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @CachePut(value = "userCache", key = "#currentUserId")
     public UserDto updateUser(Long currentUserId, UserDto userDto) {
-        User existing = userRepository.findById(currentUserId)
+        User existingUser = userRepository.findById(currentUserId)
                 .orElseThrow(UserNotFoundException::new);
         userValidator.validateEmailsAreUnique(currentUserId, userDto.emails());
         userValidator.validatePhonesAreUnique(currentUserId, userDto.phones());
 
-        existing.setName(userDto.name() == null ? existing.getName() : userDto.name());
-        existing.setDateOfBirth(userDto.dateOfBirth() == null ? existing.getDateOfBirth() : userDto.dateOfBirth());
-        existing.setPassword(userDto.password() == null ? existing.getPassword() : userDto.password());
+        existingUser.setName(userDto.name() == null ?
+                existingUser.getName() : userDto.name());
+        existingUser.setDateOfBirth(userDto.dateOfBirth() == null ?
+                existingUser.getDateOfBirth() : userDto.dateOfBirth());
 
         if (userDto.phones() != null && !userDto.phones().isEmpty()) {
-            existing.getPhones().clear();
-            existing.getPhones().addAll(
+            existingUser.getPhones().clear();
+            existingUser.getPhones().addAll(
                     userDto.phones().stream()
-                            .map(phone -> new PhoneData(null, phone, existing))
+                            .map(phone -> new PhoneData(null, phone, existingUser))
                             .toList()
             );
         }
         if (userDto.emails() != null && !userDto.emails().isEmpty()) {
-            existing.getEmails().clear();
-            existing.getEmails().addAll(
+            existingUser.getEmails().clear();
+            existingUser.getEmails().addAll(
                     userDto.emails().stream()
-                            .map(email -> new EmailData(null, email, existing))
+                            .map(email -> new EmailData(null, email, existingUser))
                             .toList()
             );
         }
-        userRepository.save(existing);
-        return userMapper.toUserDto(existing);
+        userRepository.save(existingUser);
+        return userMapper.toUserDto(existingUser);
     }
 
     private <T> T delegateToEngine(Function<SearchEngine, T> operation) {

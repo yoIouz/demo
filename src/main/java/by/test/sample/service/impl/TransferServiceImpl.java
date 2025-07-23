@@ -16,6 +16,7 @@ import static by.test.sample.utils.ApplicationConstants.BALANCE_NEGATIVE_MESSAGE
 import static by.test.sample.utils.ApplicationConstants.SELF_TRANSFER_MESSAGE;
 import static by.test.sample.utils.ApplicationConstants.TRANSFER_NEGATIVE_MESSAGE;
 import static by.test.sample.utils.ApplicationConstants.TRANSFER_REQUEST_MISSING_MESSAGE;
+import static by.test.sample.utils.ApplicationConstants.TRANSACTION_TIMEOUT_SECONDS;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class TransferServiceImpl implements TransferService {
     private final AccountRepository accountRepository;
 
     @Override
-    @Transactional
+    @Transactional(timeout = TRANSACTION_TIMEOUT_SECONDS)
     public void transfer(Long fromUserId, TransferRequestDto requestDto) {
         if (requestDto == null) {
             throw new TransferException(TRANSFER_REQUEST_MISSING_MESSAGE);

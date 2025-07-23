@@ -59,4 +59,5 @@ public final class ApplicationConstants {
 
     public static final DateTimeFormatter CUSTOM_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
+    public static final int TRANSACTION_TIMEOUT_SECONDS = 10;
 }
