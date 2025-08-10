@@ -80,7 +80,7 @@ services:
       SPRING_REDIS_HOST: ${SPRING_REDIS_HOST}
       SPRING_DEBEZIUM_HOST: ${SPRING_DEBEZIUM_HOST}
       SPRING_ELASTIC_URI: ${SPRING_ELASTIC_URI}
-      USE_ELASTIC: ${USE_ELASTIC}
+      ENGINE: ${ENGINE}
     depends_on:
       postgres:
         condition: service_healthy

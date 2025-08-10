@@ -31,7 +31,7 @@ debezium:
   redis-host: ${SPRING_REDIS_HOST:localhost}
 
 search:
-  use-elastic: ${USE_ELASTIC:false}
+  engine: ${ENGINE:jpa}
 
 scheduler:
   batch_size: 100

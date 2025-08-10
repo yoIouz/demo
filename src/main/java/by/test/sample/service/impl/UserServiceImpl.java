@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Value("${search.use-elastic:false}")
-    private boolean useElastic;
+    @Value("${search.engine}")
+    private String engineType;
 
     private final Map<SearchEngineType, SearchEngine> searchEnginesMap;
 
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private <T> T delegateToEngine(Function<SearchEngine, T> operation) {
-        SearchEngineType key = SearchEngineType.getEngine(useElastic);
+        SearchEngineType key = SearchEngineType.getEngineByType(engineType);
         return Optional.ofNullable(searchEnginesMap.get(key))
                 .map(operation)
                 .orElseThrow(() -> new SearchEngineNotFoundException(key));

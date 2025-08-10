@@ -1,7 +1,6 @@
 package by.test.sample.configuration;
 
 import by.test.sample.dto.UserFilter;
-import by.test.sample.enums.SearchEngineType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +17,8 @@ import static by.test.sample.utils.ApplicationConstants.REDIS_TTL_MINUTES;
 @Configuration
 public class RedisConfiguration {
 
-    @Value("${search.use-elastic:false}")
-    private boolean useElastic;
+    @Value("${search.engine}")
+    private String engineType;
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
@@ -40,9 +39,8 @@ public class RedisConfiguration {
         return (target, method, params) -> {
             UserFilter filter = (UserFilter) params[0];
             Pageable pageable = (Pageable) params[1];
-            String engine = SearchEngineType.getEngine(useElastic).toString();
             return filter.toString() + ":" + pageable.getPageNumber() + ":" +
-                    pageable.getPageSize() + ":" + engine;
+                    pageable.getPageSize() + ":" + engineType;
         };
     }
 }

@@ -20,5 +20,4 @@ public class DebeziumProperties {
     private String password;
 
     private String redisHost;
-
 }
