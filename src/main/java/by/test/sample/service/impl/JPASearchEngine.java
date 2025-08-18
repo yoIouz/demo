@@ -28,6 +28,9 @@ public class JPASearchEngine implements SearchEngine {
     @Transactional(readOnly = true)
     public PageDto<UserDto> findAllUsers(Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(pageable);
+        if (!usersPage.hasContent()) {
+            throw new UserNotFoundException();
+        }
         return userMapper.toUserDtoPage(usersPage);
     }
 
@@ -35,6 +38,9 @@ public class JPASearchEngine implements SearchEngine {
     @Transactional(readOnly = true)
     public PageDto<UserDto> searchUsers(UserFilter filter, Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(UserSpecifications.withFilter(filter), pageable);
+        if (!usersPage.hasContent()) {
+            throw new UserNotFoundException();
+        }
         return userMapper.toUserDtoPage(usersPage);
     }
 

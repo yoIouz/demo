@@ -4,6 +4,7 @@ import by.test.sample.dto.PageDto;
 import by.test.sample.dto.UserDto;
 import by.test.sample.dto.UserFilter;
 import by.test.sample.enums.SearchEngineType;
+import by.test.sample.exception.UserNotFoundException;
 import by.test.sample.service.SearchEngine;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
@@ -68,7 +69,7 @@ public class ElasticSearchEngine implements SearchEngine {
                     .map(Hit::source)
                     .filter(Objects::nonNull)
                     .findFirst()
-                    .orElse(null);
+                    .orElseThrow(UserNotFoundException::new);
         } catch (IOException e) {
             log.error("Failed to execute Elasticsearch query", e);
             return null;

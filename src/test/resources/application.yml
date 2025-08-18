@@ -4,4 +4,4 @@ spring:
       mode: always
 
 search:
-  engine: jpa
+  engine: ${ENGINE:jpa}

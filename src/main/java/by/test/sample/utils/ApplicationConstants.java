@@ -31,12 +31,6 @@ public final class ApplicationConstants {
     public static final String TRANSFER_REQUEST_MISSING_MESSAGE = "Request cannot be null";
 
     /// DEBEZIUM
-    public static final String USERS_TABLE = "users";
-
-    public static final String EMAIL_TABLE = "email_data";
-
-    public static final String PHONE_TABLE = "phone_data";
-
     public static final String USERS_ELASTIC_INDEX = "users";
 
     public static final String OFFSET_STORAGE_PREFIX = "debezium-offset:";

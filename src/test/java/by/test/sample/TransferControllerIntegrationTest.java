@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
+@AutoConfigureMockMvc(addFilters = false)
 @Import({TestSecurityConfiguration.class, TestCacheConfiguration.class})
 public class TransferControllerIntegrationTest extends CustomTestContainer {
 
