@@ -10,7 +10,7 @@ public abstract class DebeziumProcessor {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public abstract void process(String table, JsonNode node);
+    protected abstract void process(String table, JsonNode node);
 
     protected abstract DebeziumOperationType getOperationType();
 

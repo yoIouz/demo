@@ -24,7 +24,7 @@ public class CreateUpdateProcessor extends DebeziumProcessor {
     private final UserMapper userMapper;
 
     @Override
-    public void process(String table, JsonNode after) {
+    protected void process(String table, JsonNode after) {
         if (after == null || after.isNull()) {
             return;
         }

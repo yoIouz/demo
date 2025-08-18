@@ -25,7 +25,7 @@ public class DeleteProcessor extends DebeziumProcessor {
     private final UserMapper userMapper;
 
     @Override
-    public void process(String table, JsonNode before) {
+    protected void process(String table, JsonNode before) {
         if (before == null || before.isNull()) {
             return;
         }
